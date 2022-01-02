@@ -1,6 +1,8 @@
 from operator import itemgetter
 from flask import request, Blueprint
 
+from contest import get_contest
+
 submit_controller = Blueprint('submit', __name__)
 
 
@@ -12,8 +14,13 @@ def submit():
     body:
         contest: Id of the contest
         dataset: dataset which the test data generated from
-        testData: test data
+        test_data: test data
     """
     contest, dataset, test_data = itemgetter(
         'contest', 'dataset', 'testData')(request.get_json())
-    return request.get_json(), 200
+
+    load_contest = get_contest(contest)
+
+    error, result = load_contest.evaluate(dataset, test_data)
+
+    return {'error': error, 'result': result}
