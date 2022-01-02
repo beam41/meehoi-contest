@@ -1,4 +1,3 @@
-
 from .base import Contest
 from .zoo import ZooContest
 

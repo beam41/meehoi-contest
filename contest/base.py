@@ -4,7 +4,8 @@ from os import path
 
 
 class Contest:
-
+    """Base class for contest."""
+    
     @property
     def id(self) -> str:
         """Id of the contest. Must match with the name of the folder in static and database id."""

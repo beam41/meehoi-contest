@@ -1,17 +1,40 @@
 import traceback
 from flask import Flask
-from controller import submit_controller
 from werkzeug.exceptions import HTTPException
+from os import path
 
-app = Flask(__name__, static_folder='static')
-app.register_blueprint(submit_controller)
+from db import db
+from controller import submit_controller, contest_controller
 
 
-# base exception handle if not handled by controller
-@app.errorhandler(Exception)
-def handle_exception(e: Exception):
-    if isinstance(e, HTTPException):
-        return {"error": True, "message": str(e)}, e.code
+def create_app():
+    app = Flask(__name__, static_folder='static')
 
-    traceback.print_exc()
-    return {"error": True, "message": "Internal Server Error"}, 500
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
+        path.join(app.root_path, 'app.db')
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    setup_database(app)
+    register_blueprints(app)
+
+    @app.errorhandler(Exception)
+    def handle_exception(e: Exception):
+        """base exception handle if not handled by controller"""
+        if isinstance(e, HTTPException):
+            return {"error": True, "message": str(e)}, e.code
+
+        traceback.print_exc()
+        return {"error": True, "message": "Internal Server Error"}, 500
+
+    return app
+
+
+def setup_database(app: Flask):
+    with app.app_context():
+        db.init_app(app)
+        db.create_all()
+
+
+def register_blueprints(app: Flask):
+    app.register_blueprint(submit_controller)
+    app.register_blueprint(contest_controller)
