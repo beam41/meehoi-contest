@@ -1,8 +1,8 @@
 from typing import Union
-from contest.base import Contest
+from .base import Problem
 
 
-class ZooContest(Contest):
+class ZooProblem(Problem):
     @property
     def id(self) -> str:
         return "zoo"

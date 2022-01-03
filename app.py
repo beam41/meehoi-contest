@@ -4,7 +4,7 @@ from werkzeug.exceptions import HTTPException
 from os import path
 
 from db import db
-from controller import submit_controller, contest_controller
+from controller import submit_controller, problem_controller
 
 
 def create_app():
@@ -37,4 +37,4 @@ def setup_database(app: Flask):
 
 def register_blueprints(app: Flask):
     app.register_blueprint(submit_controller)
-    app.register_blueprint(contest_controller)
+    app.register_blueprint(problem_controller)

@@ -3,12 +3,12 @@ from flask import current_app as app
 from os import path
 
 
-class Contest:
-    """Base class for contest."""
-    
+class Problem:
+    """Base class for problem."""
+
     @property
     def id(self) -> str:
-        """Id of the contest. Must match with the name of the folder in static and database id."""
+        """Id of the problem. Must match with the name of the folder in static and database id."""
         pass
 
     def evaluate(self, dataset: str, test_data: str) -> tuple[bool, Union[int, str]]:
@@ -21,7 +21,7 @@ class Contest:
         `Invalid`: Validation failed
         `Exception`: Exception occurred
 
-        :param dataset: Id of dataset. In case contest need to load information from dataset.
+        :param dataset: Id of dataset. In case the evaluate function need to load information from dataset.
         :param test_data: test data
         """
         pass

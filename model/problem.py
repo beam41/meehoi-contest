@@ -1,8 +1,8 @@
 from db import db
 
 
-class Contest(db.Model):
-    __tablename__ = 'contests'
+class Problem(db.Model):
+    __tablename__ = 'problems'
 
     id = db.Column(db.String, primary_key=True)
     name = db.Column(db.String, unique=True)

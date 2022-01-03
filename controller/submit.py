@@ -3,46 +3,46 @@ from flask import request, Blueprint, current_app as app
 from os import makedirs, path
 from werkzeug.datastructures import FileStorage
 
-from contest import get_contest
+from problem import get_problem
 
 
-submit_controller = Blueprint('submit', __name__)
+submit_controller = Blueprint('submit', __name__, url_prefix='/submit')
 
 
-@submit_controller.route('/submit', methods=['POST'])
+@submit_controller.route('/', methods=['POST'])
 def submit():
     """
     Generate new submission in the database before submit data and code.
 
     body:
-        contest: Id of the contest
+        problem: Id of the problem
     """
-    contest = itemgetter('contest')(request.get_json())
+    problem = itemgetter('problem')(request.get_json())
     # TODO: get user id from auth
     user_id = "asdads"
     # TODO: add submission row and return database id
     return "gyjhgj"
 
 
-@submit_controller.route('/submit-data', methods=['POST'])
+@submit_controller.route('/data', methods=['POST'])
 def submit_data():
     """
     Submit a new data to evaluate score and save to database.
 
     body:
-        contest: Id of the contest
+        problem: Id of the problem
         dataset: dataset which the test data generated from
         test_data: test data
         submission_id: Id of the submission.
     """
-    contest, dataset, test_data, submission_id = itemgetter(
-        'contest', 'dataset', 'testData', 'submissionId')(request.json)
+    problem, dataset, test_data, submission_id = itemgetter(
+        'problem', 'dataset', 'testData', 'submissionId')(request.json)
     # TODO: get user id from auth
     user_id = "asdads"
 
-    load_contest = get_contest(contest)
+    loaded_problem = get_problem(problem)
 
-    error, result = load_contest.evaluate(dataset, test_data)
+    error, result = loaded_problem.evaluate(dataset, test_data)
 
     # save file to static folder
     makedirs(path.join(app.static_folder, "submit", submission_id), exist_ok=True)
@@ -54,7 +54,7 @@ def submit_data():
     return {'error': error, 'result': result}
 
 
-@submit_controller.route('/submit-code', methods=['POST'])
+@submit_controller.route('/code', methods=['POST'])
 def submit_code():
     """Save source code to static and update path to database"""
     file = request.files['file']
