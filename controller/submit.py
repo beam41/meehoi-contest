@@ -1,7 +1,6 @@
 from operator import itemgetter
 from flask import request, Blueprint, current_app as app
 from os import makedirs, path
-from werkzeug.datastructures import FileStorage
 
 from problem import get_problem
 

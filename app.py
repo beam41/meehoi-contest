@@ -3,7 +3,7 @@ from flask import Flask
 from werkzeug.exceptions import HTTPException
 from os import path
 
-from db import db
+from database import db
 from controller import submit_controller, problem_controller
 
 
