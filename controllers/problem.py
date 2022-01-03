@@ -1,6 +1,6 @@
 from operator import itemgetter
 from flask import request, Blueprint, jsonify
-from model import Problem
+from models import Problem
 
 problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
 

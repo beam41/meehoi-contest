@@ -1,5 +1,5 @@
 from database import db
-from util.gen_id import generate_sql_id
+from utils.gen_id import generate_sql_id
 
 
 class User(db.Model):

@@ -4,7 +4,7 @@ from werkzeug.exceptions import HTTPException
 from os import path
 
 from database import db
-from controller import submit_controller, problem_controller
+from controllers import submit_controller, problem_controller
 
 
 def create_app():

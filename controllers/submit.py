@@ -2,7 +2,7 @@ from operator import itemgetter
 from flask import request, Blueprint, current_app as app
 from os import makedirs, path
 
-from problem import get_problem
+from problems import get_problem
 
 
 submit_controller = Blueprint('submit', __name__, url_prefix='/submit')
