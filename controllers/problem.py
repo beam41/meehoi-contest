@@ -10,7 +10,6 @@ problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
 
 @problem_controller.route('/all', methods=['GET'])
 def get_problems():
-    # TODO: return dto
     return jsonify(list(map(lambda x: x.to_all_problem_dto(), problem.get_all_problem())))
 
 
@@ -62,3 +61,9 @@ def generate_problem():
                                0], dataset[i]) for i in range(len(dataset))])
 
     return {"complete": True}, 200
+
+
+@problem_controller.route('/<id>', methods=['GET'])
+def get_problem(id: str):
+    # TODO: this need to load data from user so I need to do the user first
+    pass
