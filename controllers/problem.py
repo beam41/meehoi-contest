@@ -2,7 +2,7 @@ from operator import itemgetter
 from flask import request, Blueprint, jsonify, current_app
 from os import listdir, path
 
-from problems import get_problem
+from problems import get_problem as get_problem_obj
 from repositories import problem, dataset as dataset_repo
 
 problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
@@ -32,7 +32,7 @@ def generate_problem():
         'id', 'name', 'dataset')(request.json)
 
     # check if problems class exist
-    if get_problem(problem_id) is None:
+    if get_problem_obj(problem_id) is None:
         return {
             "error": True,
             "message": "Problems class exist not exist"
