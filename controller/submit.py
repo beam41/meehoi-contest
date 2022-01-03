@@ -43,11 +43,6 @@ def submit_data():
 
     error, result = loaded_problem.evaluate(dataset, test_data)
 
-    # save file to static folder
-    makedirs(path.join(app.static_folder, "submit", submission_id), exist_ok=True)
-    with open(path.join(app.static_folder, "submit", submission_id, dataset+".out"), "w") as f:
-        f.write(test_data)
-
     # TODO: save to db
 
     return {'error': error, 'result': result}
