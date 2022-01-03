@@ -4,7 +4,7 @@ from werkzeug.exceptions import HTTPException
 from os import path
 
 from database import db
-from controllers import submit_controller, problem_controller
+from controllers import submit_controller, problem_controller, user_controller
 
 
 def create_app():
@@ -38,3 +38,4 @@ def setup_database(app: Flask):
 def register_blueprints(app: Flask):
     app.register_blueprint(submit_controller)
     app.register_blueprint(problem_controller)
+    app.register_blueprint(user_controller)

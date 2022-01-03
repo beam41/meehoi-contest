@@ -6,7 +6,7 @@ class Score(db.Model):
 
     submission_id: str = db.Column(db.String(10), db.ForeignKey(
         'submissions.id'), primary_key=True)
-    dataset_id: str = db.Column(db.String(10), db.ForeignKey(
+    dataset_id: str = db.Column(db.String, db.ForeignKey(
         'datasets.id'), primary_key=True)
 
     is_error: bool = db.Column(db.Boolean, nullable=False)
