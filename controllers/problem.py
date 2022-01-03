@@ -11,7 +11,7 @@ problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
 @problem_controller.route('/all', methods=['GET'])
 def get_problems():
     # TODO: return dto
-    return jsonify(problem.get_all_problem())
+    return jsonify(list(map(lambda x: x.to_all_problem_dto(), problem.get_all_problem())))
 
 
 @problem_controller.route('/generate', methods=['POST'])
