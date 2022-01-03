@@ -8,7 +8,7 @@ class User(db.Model):
 
     id: str = db.Column(db.String(10), primary_key=True,
                         default=generate_sql_id)
-    username: str = db.Column(db.String, nullable=False)
+    username: str = db.Column(db.String, nullable=False, unique=True)
     password: str = db.Column(db.String, nullable=False)
 
     submissions: list[Submission] = db.relationship(

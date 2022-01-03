@@ -3,7 +3,9 @@ from .zoo import ZooProblem
 
 
 problem_list: dict[str, Problem] = {
-    problem.id: problem for problem in [ZooProblem()]
+    problem.id: problem for problem in [
+        ZooProblem()  # new problem here
+    ]
 }
 
 
