@@ -35,7 +35,7 @@ def submit_data():
         submission_id: Id of the submission.
     """
     problem, dataset, test_data, submission_id = itemgetter(
-        'problem', 'dataset', 'testData', 'submissionId')(request.json)
+        'problem', 'dataset', 'test_data', 'submission_id')(request.json)
     # TODO: get user id from auth
     user_id = "asdads"
 
@@ -52,7 +52,7 @@ def submit_data():
 def submit_code():
     """Save source code to static and update path to database"""
     file = request.files['file']
-    submission_id = request.form['submissionId']
+    submission_id = request.form['submission_id']
 
     makedirs(path.join(app.static_folder, "submit", submission_id), exist_ok=True)
     file.save(path.join(app.static_folder, "submit",
