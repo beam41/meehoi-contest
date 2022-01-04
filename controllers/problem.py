@@ -30,6 +30,11 @@ def generate_problem():
         name: Name of the problem
         dataset: list of the name of the dataset, will be match by index with file sorted alphabetically
     """
+    if request.headers.get('x-admin-key') != current_app.config['ADMIN_SPECIAL_KEY']:
+        return {
+            "error": True,
+            "message": "You are not authorized to perform this action."
+        }, 403
     try:
         problem_id, name, dataset = itemgetter(
             'id', 'name', 'dataset')(request.json)
