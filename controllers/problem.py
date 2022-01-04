@@ -2,7 +2,6 @@ from operator import itemgetter
 from flask import request, Blueprint, jsonify, current_app
 from os import listdir, path
 import traceback
-from models.dto import AllProblemDto
 
 from problems import get_problem as get_problem_obj
 from repositories import problem, dataset as dataset_repo
@@ -12,7 +11,7 @@ problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
 
 @problem_controller.route('/all', methods=['GET'])
 def get_problems():
-    return jsonify(AllProblemDto(list(map(lambda x: x.to_problem_with_index(), problem.get_all_problem()))))
+    return jsonify(problems=list(map(lambda x: x.to_problem_with_index(), problem.get_all_problem())))
 
 
 @problem_controller.route('/generate', methods=['POST'])

@@ -2,6 +2,7 @@ import traceback
 from flask import Flask
 from werkzeug.exceptions import HTTPException
 from os import path
+from flask_jwt_extended import JWTManager
 
 from database import db
 from controllers import submit_controller, problem_controller, user_controller
@@ -9,13 +10,13 @@ from controllers import submit_controller, problem_controller, user_controller
 
 def create_app():
     app = Flask(__name__, static_folder='static')
-
+    app.config.from_object('config')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
         path.join(app.root_path, 'app.db')
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     setup_database(app)
     register_blueprints(app)
+    JWTManager(app)
 
     @app.errorhandler(Exception)
     def handle_exception(e: Exception):

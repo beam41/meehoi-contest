@@ -15,3 +15,14 @@ def add_user(username: str, password: str) -> str:
     db.session.commit()
     db.session.refresh(user)
     return user.id
+
+
+def get_user(username: str, password: str) -> User:
+    """
+    Get user by username and password
+
+    :param username: username of the user
+    :param password: password of the user
+    :return: User object
+    """
+    return User.query.filter_by(username=username, password=password).one()
