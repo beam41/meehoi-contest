@@ -23,3 +23,8 @@ def add_problem(id: str, name: str):
     problem = Problem(id=id, name=name, index=max_i)
     db.session.add(problem)
     db.session.commit()
+
+
+def get_problem(id: str) -> Problem:
+    """get a problems"""
+    return Problem.query.filter_by(id=id).one()
