@@ -79,4 +79,5 @@ def generate_problem():
 
 @problem_controller.route('/<id>', methods=['GET'])
 def get_problem(id: str):
+    """Get individual problem with dataset"""
     return jsonify(problem.get_problem(id).to_problem_with_dataset())
