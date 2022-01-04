@@ -26,18 +26,18 @@ def add_user():
     if request.headers.get('x-admin-key') != app.config['ADMIN_SPECIAL_KEY']:
         return {
             "error": True,
-            "message": "You are not authorized to perform this action."
+            "msg": "You are not authorized to perform this action."
         }, 403
     try:
         username = request.json['username']
         pwd = nanoid.generate(alphabet=safe_alpha, size=6)
         user.add_user(username, pwd)
-        return {"message": "User added (pwd: {})".format(pwd)}
+        return {"msg": "User added (pwd: {})".format(pwd)}
     except Exception as e:
         traceback.print_exc()
         return {
             "error": True,
-            "message": str(e)
+            "msg": str(e)
         }, 500
 
 
@@ -47,7 +47,7 @@ def login():
         'username', 'password')(request.json)
     user_ = user.get_user(username, password)
     if user_ is None:
-        return {"error": True, "message": "Wrong Username or Password"}, 401
+        return {"error": True, "msg": "Wrong Username or Password"}, 401
 
     access_token = create_access_token(identity=user_.id)
     return {'access_token': access_token, 'username': user_.username, 'id': user_.id, 'expires_in': (datetime.now(tz=get_localzone()) + app.config['JWT_ACCESS_TOKEN_EXPIRES']).isoformat()}

@@ -9,8 +9,8 @@ def get_all_dataset(problem_name: str) -> list[Dataset]:
 
     :param problem: name of the problem
     """
-    problem = Problem.query.filter_by(name=problem_name).subquery()
-    return Dataset.query.filter_by(Dataset.id.in_(problem)).all()
+    problem = db.session.query(Dataset.id).filter_by(name=problem_name).scalar_subquery()
+    return Dataset.query.filter(Dataset.id.in_(problem)).all()
 
 
 def add_dataset(problem_id: str, name: str) -> str:

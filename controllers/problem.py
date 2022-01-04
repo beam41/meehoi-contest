@@ -1,6 +1,8 @@
 from operator import itemgetter
 from flask import request, Blueprint, jsonify, current_app
 from os import listdir, path
+from flask_jwt_extended.utils import get_jwt_identity
+from flask_jwt_extended.view_decorators import jwt_required
 import traceback
 
 from problems import get_problem as get_problem_obj
@@ -33,7 +35,7 @@ def generate_problem():
     if request.headers.get('x-admin-key') != current_app.config['ADMIN_SPECIAL_KEY']:
         return {
             "error": True,
-            "message": "You are not authorized to perform this action."
+            "msg": "You are not authorized to perform this action."
         }, 403
     try:
         problem_id, name, dataset = itemgetter(
@@ -43,14 +45,14 @@ def generate_problem():
         if get_problem_obj(problem_id) is None:
             return {
                 "error": True,
-                "message": "Problems class exist not exist"
+                "msg": "Problems class exist not exist"
             }, 400
 
         folder_name = path.join(current_app.static_folder, problem_id)
         if not path.exists(folder_name):
             return {
                 "error": True,
-                "message": "Folder not exist"
+                "msg": "Folder not exist"
             }, 400
 
         dataset_files = [f for f in listdir(folder_name) if path.isfile(
@@ -61,7 +63,7 @@ def generate_problem():
         if len(dataset_files) != len(dataset):
             return {
                 "error": True,
-                "message": "Number of dataset is not match"
+                "msg": "Number of dataset is not match"
             }, 400
 
         problem.add_problem(problem_id, name)
@@ -73,7 +75,7 @@ def generate_problem():
         traceback.print_exc()
         return {
             "error": True,
-            "message": str(e)
+            "msg": str(e)
         }, 500
 
 
@@ -81,3 +83,14 @@ def generate_problem():
 def get_problem(id: str):
     """Get individual problem with dataset"""
     return jsonify(problem.get_problem(id).to_problem_with_dataset())
+
+
+@problem_controller.route('/<id>/best', methods=['GET'])
+@jwt_required()
+def get_problem_best(id: str):
+    """
+    Get best score of the problem by id.
+    """
+    user_id = get_jwt_identity()
+
+    return jsonify(problem.get_problem_bestscore(id, user_id))

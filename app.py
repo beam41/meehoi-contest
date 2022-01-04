@@ -5,7 +5,7 @@ from os import path
 from flask_jwt_extended import JWTManager
 
 from database import db
-from controllers import submit_controller, problem_controller, user_controller
+from controllers import submit_controller, problem_controller, user_controller, submission_controller
 
 
 def create_app():
@@ -40,3 +40,4 @@ def register_blueprints(app: Flask):
     app.register_blueprint(submit_controller)
     app.register_blueprint(problem_controller)
     app.register_blueprint(user_controller)
+    app.register_blueprint(submission_controller)
