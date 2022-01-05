@@ -5,3 +5,4 @@ from .submission_with_score_dto import SubmissionWithScoreDto
 from .score_dto import ScoreDto
 from .submission_dto import SubmissionDto
 from .best_score_dto import BestScoreDto
+from .leaderboard_dto import LeaderboardDto
