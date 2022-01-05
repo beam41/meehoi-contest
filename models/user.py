@@ -6,7 +6,7 @@ from utils.gen_id import generate_user_id
 class User(db.Model):
     __tablename__ = 'users'
 
-    id: str = db.Column(db.String(5), primary_key=True,
+    id: str = db.Column(db.CHAR(5), primary_key=True,
                         default=generate_user_id)
     username: str = db.Column(db.String, nullable=False, unique=True)
     password: str = db.Column(db.String, nullable=False)

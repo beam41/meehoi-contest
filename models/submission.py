@@ -1,3 +1,4 @@
+from sqlalchemy.sql import func
 from database import db
 from models.dto import SubmissionWithScoreDto, SubmissionDto
 from models.score import Score
@@ -8,16 +9,15 @@ from datetime import datetime
 class Submission(db.Model):
     __tablename__ = 'submissions'
 
-    id: str = db.Column(db.String(10), primary_key=True,
+    id: str = db.Column(db.CHAR(10), primary_key=True,
                         default=generate_submission_id)
     code_path: str = db.Column(db.String)
-    # TODO: switch to server_default=func.utcnow() after switching to other db engine
     created_date: datetime = db.Column(db.DateTime(
-        timezone=True), default=datetime.utcnow)
+        timezone=True), server_default=func.now())
 
     problem_id: str = db.Column(db.String, db.ForeignKey(
         'problems.id'), nullable=False)
-    user_id: str = db.Column(db.String(5), db.ForeignKey(
+    user_id: str = db.Column(db.CHAR(5), db.ForeignKey(
         'users.id'), nullable=False)
 
     scores: list[Score] = db.relationship('Score', lazy=True)

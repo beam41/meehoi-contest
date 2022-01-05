@@ -1,5 +1,3 @@
-from sqlalchemy.orm import aliased
-from sqlalchemy.dialects import sqlite
 from models import Problem, Dataset, Score, Submission, User
 from database import db
 from sqlalchemy.sql.expression import func, text
@@ -48,9 +46,9 @@ def get_problem_bestscore(id: str, user_id: str) -> BestScoreDto:
 
     return best_score_dto.from_query_result(
         db.session.query(Score.dataset_id, func.max(Score.score))
+        .filter(Score.submission_id.in_(submission))
+        .filter(Score.dataset_id.in_(dataset))
         .group_by(Score.dataset_id)
-        .having(Score.dataset_id.in_(dataset))
-        .having(Score.submission_id.in_(submission))
         .all()
     )
 
@@ -74,9 +72,9 @@ def get_problem_leaderboard(id: str) -> LeaderboardDto:
         .scalar_subquery()
 
     max_score = db.session.query(func.max(Score.score).label('score')) \
+        .filter(Score.dataset_id.in_(dataset)) \
+        .filter(Score.submission_id.in_(submission)) \
         .group_by(Score.dataset_id) \
-        .having(Score.dataset_id.in_(dataset)) \
-        .having(Score.submission_id.in_(submission)) \
         .subquery('max_score')
 
     sum_score = db.session \
@@ -84,4 +82,4 @@ def get_problem_leaderboard(id: str) -> LeaderboardDto:
         .select_from(max_score) \
         .scalar_subquery()
 
-    return leaderboard_dto.from_query_result(db.session.query(User.id, User.username, sum_score).all())
+    return leaderboard_dto.from_query_result(db.session.query(User.id, User.username, sum_score).filter(sum_score.isnot(None)).all())

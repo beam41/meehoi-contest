@@ -5,7 +5,7 @@ from .dto import ScoreDto
 class Score(db.Model):
     __tablename__ = 'scores'
 
-    submission_id: str = db.Column(db.String(10), db.ForeignKey(
+    submission_id: str = db.Column(db.CHAR(10), db.ForeignKey(
         'submissions.id'), primary_key=True)
     dataset_id: str = db.Column(db.String, db.ForeignKey(
         'datasets.id'), primary_key=True)

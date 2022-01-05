@@ -12,8 +12,6 @@ from models.dto import ErrorDto
 def create_app():
     app = Flask(__name__, static_folder='static')
     app.config.from_object('config')
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
-        path.join(app.root_path, 'app.db')
 
     setup_database(app)
     register_blueprints(app)
