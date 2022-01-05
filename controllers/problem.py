@@ -4,6 +4,7 @@ from os import listdir, path
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
 import traceback
+from models.dto import ErrorDto
 
 from problems import get_problem as get_problem_obj
 from repositories import problem, dataset as dataset_repo
@@ -33,27 +34,18 @@ def generate_problem():
         dataset: list of the name of the dataset, will be match by index with file sorted alphabetically
     """
     if request.headers.get('x-admin-key') != current_app.config['ADMIN_SPECIAL_KEY']:
-        return {
-            "error": True,
-            "msg": "You are not authorized to perform this action."
-        }, 403
+        return ErrorDto("You are not authorized to perform this action.", 403).to_request()
     try:
         problem_id, name, dataset = itemgetter(
             'id', 'name', 'dataset')(request.json)
 
         # check if problems class exist
         if get_problem_obj(problem_id) is None:
-            return {
-                "error": True,
-                "msg": "Problems class exist not exist"
-            }, 400
+            return ErrorDto("Problems class exist not exist").to_request()
 
         folder_name = path.join(current_app.static_folder, problem_id)
         if not path.exists(folder_name):
-            return {
-                "error": True,
-                "msg": "Folder not exist"
-            }, 400
+            return ErrorDto("Folder not exist").to_request()
 
         dataset_files = [f for f in listdir(folder_name) if path.isfile(
             path.join(folder_name, f)) and f.endswith('.in')]
@@ -61,10 +53,7 @@ def generate_problem():
         dataset_files.sort()
 
         if len(dataset_files) != len(dataset):
-            return {
-                "error": True,
-                "msg": "Number of dataset is not match"
-            }, 400
+            return ErrorDto("Number of dataset is not match").to_request()
 
         problem.add_problem(problem_id, name)
         dataset_repo.add_dataset_m(problem_id, [(dataset_files[i].split('.')[
@@ -73,10 +62,7 @@ def generate_problem():
         return {"complete": True}, 200
     except Exception as e:
         traceback.print_exc()
-        return {
-            "error": True,
-            "msg": str(e)
-        }, 500
+        return ErrorDto(str(e), 500).to_request()
 
 
 @problem_controller.route('/<id>', methods=['GET'])

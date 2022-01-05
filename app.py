@@ -6,6 +6,7 @@ from flask_jwt_extended import JWTManager
 
 from database import db
 from controllers import leaderboard_controller, submit_controller, problem_controller, user_controller, submission_controller
+from models.dto import ErrorDto
 
 
 def create_app():
@@ -22,10 +23,10 @@ def create_app():
     def handle_exception(e: Exception):
         """base exception handle if not handled by controller"""
         if isinstance(e, HTTPException):
-            return {"error": True, "message": str(e)}, e.code
+            return ErrorDto(str(e), e.code).to_request()
 
         traceback.print_exc()
-        return {"error": True, "message": "Internal Server Error"}, 500
+        return ErrorDto(str(e), 500).to_request()
 
     return app
 

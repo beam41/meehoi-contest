@@ -23,7 +23,7 @@ def submit():
     problem = itemgetter('problem')(request.get_json())
     user_id = get_jwt_identity()
     id = submission.add_submission(problem, user_id)
-    return {'submission_id': id}
+    return {'id': id}
 
 
 @submit_controller.route('/data', methods=['POST'])

@@ -15,7 +15,7 @@ def get_submission_in_problem(problem_id: str):
     Get all submission in problem by problem_id.
     """
     user_id = get_jwt_identity()
-    return jsonify([submission.to_submission_dto() for submission in submission.get_submissions_in_problem(problem_id, user_id)])
+    return jsonify(submissions=[submission.to_submission_dto() for submission in submission.get_submissions_in_problem(problem_id, user_id)])
 
 
 @submission_controller.route('/<id>', methods=['GET'])
