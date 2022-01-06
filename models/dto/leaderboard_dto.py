@@ -10,7 +10,7 @@ class LeaderBoardScoreDto:
 
 @dataclass
 class LeaderboardDto:
-    scores: list[LeaderBoardScoreDto]
+    ranks: list[LeaderBoardScoreDto]
 
 
 def from_query_result(result: tuple[str, int]) -> LeaderboardDto:
