@@ -1,6 +1,7 @@
 from database import db
 from models.dataset import Dataset
 from models.submission import Submission
+from models.leaderboard import Leaderboard
 from .dto import ProblemWithIndexDto, ProblemWithDatasetDto
 
 
@@ -15,6 +16,8 @@ class Problem(db.Model):
         'Dataset', backref='problems', lazy=True)
     submissions: list[Submission] = db.relationship(
         'Submission', backref='problems', lazy=True)
+    leaderboard: list[Leaderboard] = db.relationship(
+        'Leaderboard', backref='problems', lazy=True)
 
     def to_problem_with_index(self) -> ProblemWithIndexDto:
         return ProblemWithIndexDto(self.id, self.name, self.index)

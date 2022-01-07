@@ -3,3 +3,4 @@ from .dataset import Dataset
 from .submission import Submission
 from .user import User
 from .problem import Problem
+from .leaderboard import Leaderboard

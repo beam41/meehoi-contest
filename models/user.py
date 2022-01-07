@@ -1,5 +1,6 @@
 from database import db
 from models.submission import Submission
+from models.leaderboard import Leaderboard
 from utils.gen_id import generate_user_id
 
 
@@ -13,3 +14,5 @@ class User(db.Model):
 
     submissions: list[Submission] = db.relationship(
         'Submission', backref='users', lazy=True)
+    leaderboard: list[Leaderboard] = db.relationship(
+        'Leaderboard', backref='users', lazy=True)
