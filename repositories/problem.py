@@ -2,13 +2,29 @@ from models import Problem, Dataset, Score, Submission
 from database import db
 from sqlalchemy.sql.expression import func
 
-from models.dto import BestScoreDto, best_score_dto
+from models.dto import BestScoreDto, best_score_dto, problem_list_dto, ProblemListDto
+from models.leaderboard import Leaderboard
 
 
 def get_all_problem() -> list[Problem]:
     """get list of all problems"""
-    # TODO: return user rank
     return Problem.query.order_by(Problem.index).all()
+
+
+def get_all_problem_with_rank(user_id: str) -> ProblemListDto:
+    """get list of all problems with rank"""
+    rank = db.session \
+        .query(Leaderboard.rank) \
+        .filter(Leaderboard.user_id == user_id) \
+        .filter(Leaderboard.problem_id == Problem.id) \
+        .filter(Leaderboard.score.is_not(None)) \
+        .correlate(Problem) \
+        .scalar_subquery()
+    return problem_list_dto.from_query_result(
+        db.session.query(Problem.id, Problem.name, Problem.index, rank)
+        .order_by(Problem.index)
+        .all()
+    )
 
 
 def add_problem(id: str, name: str):

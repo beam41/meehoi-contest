@@ -7,3 +7,5 @@ from .submission_dto import SubmissionDto
 from .best_score_dto import BestScoreDto
 from .leaderboard_dto import LeaderboardDto
 from .error_dto import ErrorDto
+from .problem_with_rank_dto import ProblemWithRankDto
+from .problem_list_dto import ProblemListDto

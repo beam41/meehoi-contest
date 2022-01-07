@@ -3,7 +3,7 @@ from database import db
 from sqlalchemy.sql.expression import func, true
 from sqlalchemy.orm.util import aliased
 from sqlalchemy import insert
-from models.dto import LeaderboardDto
+from models.dto import LeaderboardDto, leaderboard_dto
 
 
 def aggregate_problem_leaderboard():
@@ -75,10 +75,6 @@ def aggregate_problem_leaderboard():
                 order_by=sum_score,
                 partition_by=Problem.id
             ),
-            func.row_number().over(
-                order_by=[sum_score, best_time],
-                partition_by=Problem.id
-            )
         ) \
         .join(Problem, true())
 
@@ -88,7 +84,6 @@ def aggregate_problem_leaderboard():
         Leaderboard.score,
         Leaderboard.best_time,
         Leaderboard.rank,
-        Leaderboard.row_number,
     ], query)
 
     Leaderboard.query.delete()
@@ -97,4 +92,17 @@ def aggregate_problem_leaderboard():
 
 
 def get_problem_leaderboard(id) -> LeaderboardDto:
-    pass
+    return leaderboard_dto.from_query_result(
+        db.session.query(
+            Leaderboard.user_id,
+            User.username,
+            Leaderboard.score,
+            Leaderboard.rank
+        )
+        .join(User, Leaderboard.user_id == User.id)
+        .filter(Leaderboard.problem_id == id)
+        .filter(Leaderboard.score.is_not(None))
+        .order_by(Leaderboard.rank)
+        .order_by(Leaderboard.best_time)
+        .all()
+    )

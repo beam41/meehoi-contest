@@ -13,4 +13,3 @@ class Leaderboard(db.Model):
     score: int = db.Column(db.Integer)
     best_time: datetime = db.Column(db.DateTime(timezone=True))
     rank: int = db.Column(db.Integer)
-    row_number: int = db.Column(db.Integer)

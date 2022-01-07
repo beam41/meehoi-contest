@@ -13,8 +13,10 @@ problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
 
 
 @problem_controller.route('/all', methods=['GET'])
+@jwt_required()
 def get_problems():
-    return jsonify(problems=list(map(lambda x: x.to_problem_with_index(), problem.get_all_problem())))
+    user_id = get_jwt_identity()
+    return jsonify(problem.get_all_problem_with_rank(user_id))
 
 
 @problem_controller.route('/generate', methods=['POST'])
