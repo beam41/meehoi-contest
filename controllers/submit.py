@@ -11,7 +11,7 @@ from repositories import submission
 submit_controller = Blueprint('submit', __name__, url_prefix='/submit')
 
 
-@submit_controller.route('/', methods=['POST'])
+@submit_controller.route('', methods=['POST'])
 @jwt_required()
 def submit():
     """

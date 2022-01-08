@@ -15,7 +15,7 @@ from models.dto import ErrorDto
 user_controller = Blueprint('user', __name__, url_prefix='/user')
 
 
-@user_controller.route('/', methods=['POST'])
+@user_controller.route('', methods=['POST'])
 def add_user():
     """
     (Admin only)

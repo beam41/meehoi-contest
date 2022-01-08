@@ -3,6 +3,7 @@ from flask import Flask
 from werkzeug.exceptions import HTTPException
 from os import path
 from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 from database import db
 from controllers import leaderboard_controller, submit_controller, problem_controller, user_controller, submission_controller
@@ -13,6 +14,7 @@ def create_app():
     app = Flask(__name__, static_folder='static')
     app.config.from_object('config')
 
+    CORS(app)
     setup_database(app)
     register_blueprints(app)
     JWTManager(app)
