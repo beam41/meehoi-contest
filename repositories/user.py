@@ -25,4 +25,4 @@ def get_user(username: str, password: str) -> User:
     :param password: password of the user
     :return: User object
     """
-    return User.query.filter_by(username=username, password=password).one()
+    return User.query.filter_by(username=username, password=password).first()

@@ -28,6 +28,7 @@ def generate_problem():
     - Create problem folder in `static` folder with name match `problem_id`
     - Place your dataset in your problem folder, it has to end with `.in` like `a_test.in`
     (start with alphabet is optional but the function match index of dataset name in body field with index of file sorted alphabetically)
+    - Place your problem description in the folder with name `problem_[problem_id].pdf`
     - Create new problem class to evaluate your problem in `problems` folder with `id` match `problem_id` and import in `__init__.py`
 
     body:

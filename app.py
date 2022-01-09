@@ -4,11 +4,13 @@ from werkzeug.exceptions import HTTPException
 from os import path
 from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from flask_migrate import Migrate
 
 from database import db
 from controllers import leaderboard_controller, submit_controller, problem_controller, user_controller, submission_controller
 from models.dto import ErrorDto
 
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__, static_folder='static')
@@ -35,6 +37,7 @@ def setup_database(app: Flask):
     with app.app_context():
         db.init_app(app)
         db.create_all()
+        migrate.init_app(app, db)
 
 
 def register_blueprints(app: Flask):

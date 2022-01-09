@@ -10,7 +10,7 @@ class Dataset(db.Model):
     name: str = db.Column(db.String, nullable=False)
 
     problem_id: str = db.Column(db.String, db.ForeignKey(
-        'problems.id'), nullable=False)
+        'problems.id'), nullable=False, index=True)
 
     scores: list[Score] = db.relationship('Score', lazy=True)
 

@@ -16,9 +16,9 @@ class Submission(db.Model):
         timezone=True), server_default=func.now())
 
     problem_id: str = db.Column(db.String, db.ForeignKey(
-        'problems.id'), nullable=False)
+        'problems.id'), nullable=False, index=True)
     user_id: str = db.Column(db.CHAR(5), db.ForeignKey(
-        'users.id'), nullable=False)
+        'users.id'), nullable=False, index=True)
 
     scores: list[Score] = db.relationship('Score', lazy=True)
 
