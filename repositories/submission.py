@@ -1,3 +1,4 @@
+from sqlalchemy.sql.expression import desc
 from models import Submission, Score
 from database import db
 
@@ -73,4 +74,7 @@ def get_submissions_in_problem(problem_id: str, user_id: str) -> list[Submission
 
     :return: List of submission
     """
-    return Submission.query.filter_by(problem_id=problem_id, user_id=user_id).all()
+    return Submission.query \
+        .filter_by(problem_id=problem_id, user_id=user_id) \
+        .order_by(desc(Submission.created_date)) \
+        .all()
