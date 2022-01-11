@@ -4,6 +4,7 @@ from os import makedirs, path
 from flask.json import jsonify
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended.utils import get_jwt_identity
+import asyncio
 
 from problems import get_problem
 from repositories import submission
@@ -41,7 +42,7 @@ def submit():
 
 @submit_controller.route('/data', methods=['POST'])
 @jwt_required()
-def submit_data():
+async def submit_data():
     """
     Submit a new data to evaluate score and save to database.
 
@@ -58,6 +59,13 @@ def submit_data():
     if not submission.check_submission_owner(submission_id, user_id):
         return {'msg': 'You are not the owner of this submission'}, 403
 
+    asyncio.create_task(evalute_helper(
+        problem, dataset, test_data, submission_id))
+
+    return {'msg': 'Success'}
+
+
+async def evalute_helper(problem: str, dataset: str, test_data: str, submission_id: str):
     submission.add_score(submission_id, dataset)
 
     loaded_problem = get_problem(problem)
@@ -67,5 +75,3 @@ def submit_data():
     submission.update_score(submission_id, dataset, error,
                             result if error else None,
                             result if not error else None)
-
-    return {'error': error, 'result': result}
