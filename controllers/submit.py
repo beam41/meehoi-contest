@@ -1,6 +1,7 @@
 from operator import itemgetter
 from flask import request, Blueprint, current_app as app
 from os import makedirs, path
+from flask.json import jsonify
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended.utils import get_jwt_identity
 
@@ -20,10 +21,22 @@ def submit():
     body:
         problem: Id of the problem
     """
-    problem = itemgetter('problem')(request.get_json())
+    file = request.files['file']
+    problem = request.form['problem']
     user_id = get_jwt_identity()
-    id = submission.add_submission(problem, user_id)
-    return {'id': id}
+
+    submission_ = submission.add_submission(
+        problem,
+        user_id,
+        file.filename
+    )
+
+    makedirs(path.join(app.static_folder, "submit",
+             submission_.id), exist_ok=True)
+    file.save(path.join(app.static_folder, "submit",
+              submission_.id, file.filename))
+
+    return jsonify(submission_.to_submission_dto())
 
 
 @submit_controller.route('/data', methods=['POST'])
@@ -45,6 +58,8 @@ def submit_data():
     if not submission.check_submission_owner(submission_id, user_id):
         return {'msg': 'You are not the owner of this submission'}, 403
 
+    submission.add_score(submission_id, dataset)
+
     loaded_problem = get_problem(problem)
 
     error, result = loaded_problem.evaluate(dataset, test_data)
@@ -54,28 +69,3 @@ def submit_data():
                             result if not error else None)
 
     return {'error': error, 'result': result}
-
-
-@submit_controller.route('/code', methods=['POST'])
-@jwt_required()
-def submit_code():
-    """Save source code to static and update path to database"""
-    file = request.files['file']
-    submission_id = request.form['submission_id']
-    user_id = get_jwt_identity()
-
-    if not submission.check_submission_owner(submission_id, user_id):
-        return {'msg': 'You are not the owner of this submission'}, 403
-
-    makedirs(path.join(app.static_folder, "submit", submission_id), exist_ok=True)
-    file.save(path.join(app.static_folder, "submit",
-              submission_id, file.filename))
-
-    submission.update_codepath(
-        submission_id,
-        "/".join(["submit",
-                  submission_id,
-                  file.filename])
-    )
-
-    return {'completed': True}

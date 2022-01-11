@@ -3,18 +3,18 @@ from models import Submission, Score
 from database import db
 
 
-def add_submission(problem_id: str, user_id: str) -> str:
+def add_submission(problem_id: str, user_id: str, code_path: str) -> Submission:
     """
     :param problem_id: Id of the problem
     :param user_id: Id of the user
 
-    :return: Id of the submission
+    :return: Submission
     """
-    submission = Submission(user_id=user_id, problem_id=problem_id)
+    submission = Submission(user_id=user_id, problem_id=problem_id, code_path=code_path)
     db.session.add(submission)
     db.session.commit()
     db.session.refresh(submission)
-    return submission.id
+    return submission
 
 
 def check_submission_owner(submission_id: str, user_id: str) -> bool:
@@ -41,6 +41,22 @@ def update_codepath(submission_id: str, code_path: str):
     db.session.commit()
 
 
+def add_score(submission_id: str, dataset_id: str):
+    """
+    crate a score object for the submission and dataset with default to running
+    :param submission_id: Id of the submission
+    :param dataset_id: Id of the dataset
+    :param is_error: True if the submission is error
+    :param error_txt: Error text
+    :param score: Score of the submission + dataset
+
+    :return: None
+    """
+    score_obj = Score(submission_id=submission_id, dataset_id=dataset_id)
+    db.session.add(score_obj)
+    db.session.commit()
+
+
 def update_score(submission_id: str, dataset_id: str, is_error: bool, error_txt: str, score: int):
     """
     :param submission_id: Id of the submission
@@ -51,9 +67,12 @@ def update_score(submission_id: str, dataset_id: str, is_error: bool, error_txt:
 
     :return: None
     """
-    score_obj = Score(submission_id=submission_id, dataset_id=dataset_id,
-                      is_error=is_error, error_txt=error_txt, score=score)
-    db.session.add(score_obj)
+    score_ = Score.query.filter_by(
+        submission_id=submission_id, dataset_id=dataset_id).first()
+    score_.is_running = False
+    score_.is_error = is_error
+    score_.error_txt = error_txt
+    score_.score = score
     db.session.commit()
 
 

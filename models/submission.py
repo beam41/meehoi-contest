@@ -11,14 +11,14 @@ class Submission(db.Model):
 
     id: str = db.Column(db.CHAR(10), primary_key=True,
                         default=generate_submission_id)
-    code_path: str = db.Column(db.String)
-    created_date: datetime = db.Column(db.DateTime(
-        timezone=True), server_default=func.now())
-
-    problem_id: str = db.Column(db.String, db.ForeignKey(
-        'problems.id'), nullable=False, index=True)
     user_id: str = db.Column(db.CHAR(5), db.ForeignKey(
         'users.id'), nullable=False, index=True)
+    problem_id: str = db.Column(db.String, db.ForeignKey(
+        'problems.id'), nullable=False, index=True)
+    created_date: datetime = db.Column(db.DateTime(
+        timezone=True), server_default=func.now())
+    code_path: str = db.Column(db.String)
+
 
     scores: list[Score] = db.relationship('Score', lazy=True)
 

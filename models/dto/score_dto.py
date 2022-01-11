@@ -7,3 +7,4 @@ class ScoreDto:
     is_error: bool
     error_txt: str
     score: int
+    is_running: bool
