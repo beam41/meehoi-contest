@@ -10,7 +10,8 @@ def add_submission(problem_id: str, user_id: str, code_path: str) -> Submission:
 
     :return: Submission
     """
-    submission = Submission(user_id=user_id, problem_id=problem_id, code_path=code_path)
+    submission = Submission(
+        user_id=user_id, problem_id=problem_id, code_path=code_path)
     db.session.add(submission)
     db.session.commit()
     db.session.refresh(submission)
@@ -97,3 +98,16 @@ def get_submissions_in_problem(problem_id: str, user_id: str) -> list[Submission
         .filter_by(problem_id=problem_id, user_id=user_id) \
         .order_by(desc(Submission.created_date)) \
         .all()
+
+
+def get_score(submission_id: str, dataset_id: str) -> Score:
+    """
+    Get score
+
+    Need to use session because regular query will not refresh the object
+    """
+    data = db.session \
+        .query(Score) \
+        .filter(Score.submission_id == submission_id, Score.dataset_id == dataset_id) \
+        .first()
+    return data
