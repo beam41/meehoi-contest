@@ -205,9 +205,9 @@ def get_all_problem_with_rank(user_id: str) -> ProblemListDto:
 
     query = db.session.query(
         query_union.c[0],
-        func.group_concat(query_union.c[1]),
+        func.max(query_union.c[1]),
         func.group_concat(query_union.c[3]),
-        func.group_concat(query_union.c[4]),
+        func.max(query_union.c[4]),
     ) \
         .group_by(query_union.c[0]) \
         .order_by(query_union.c[3])
