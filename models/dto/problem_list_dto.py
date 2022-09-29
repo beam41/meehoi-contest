@@ -9,4 +9,4 @@ class ProblemListDto:
 
 
 def from_query_result(result) -> ProblemListDto:
-    return ProblemListDto([ProblemWithRankDto(id, name, index, rank) for id, name, index, rank in result])
+    return ProblemListDto([ProblemWithRankDto(id, name, index, rank) for id, rank, index, name in result])

@@ -1,16 +1,17 @@
 import traceback
-from flask import Flask
-from werkzeug.exceptions import HTTPException
-from os import path
-from flask_jwt_extended import JWTManager
-from flask_cors import CORS
-from flask_migrate import Migrate
 
+from flask import Flask
+from flask_cors import CORS
+from flask_jwt_extended import JWTManager
+from flask_migrate import Migrate
+from werkzeug.exceptions import HTTPException
+
+from controllers import *
 from database import db
-from controllers import leaderboard_controller, submit_controller, problem_controller, user_controller, submission_controller
 from models.dto import ErrorDto
 
 migrate = Migrate()
+
 
 def create_app():
     app = Flask(__name__, static_folder='static')

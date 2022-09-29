@@ -1,11 +1,12 @@
+import traceback
 from operator import itemgetter
-from flask import request, Blueprint, jsonify, current_app
 from os import listdir, path
+
+from flask import request, Blueprint, jsonify, current_app
 from flask_jwt_extended.utils import get_jwt_identity
 from flask_jwt_extended.view_decorators import jwt_required
-import traceback
-from models.dto import ErrorDto
 
+from models.dto import ErrorDto
 from problems import get_problem as get_problem_obj
 from repositories import problem, dataset as dataset_repo
 
@@ -60,7 +61,7 @@ def generate_problem():
 
         problem.add_problem(problem_id, name)
         dataset_repo.add_dataset_m(problem_id, [(dataset_files[i].split('.')[
-            0], dataset[i]) for i in range(len(dataset))])
+                                                     0], dataset[i]) for i in range(len(dataset))])
 
         return {"complete": True}, 200
     except Exception as e:

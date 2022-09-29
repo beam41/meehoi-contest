@@ -1,13 +1,12 @@
-from models import Dataset
 from database import db
-from models.problem import Problem
+from models import Dataset
 
 
 def get_all_dataset(problem_name: str) -> list[Dataset]:
     """
     get a dataset of a problem
 
-    :param problem: name of the problem
+    :param problem_name: name of the problem
     """
     problem = db.session.query(Dataset.id).filter_by(name=problem_name).scalar_subquery()
     return Dataset.query.filter(Dataset.id.in_(problem)).all()
