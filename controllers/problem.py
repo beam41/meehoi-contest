@@ -16,6 +16,9 @@ problem_controller = Blueprint('problem', __name__, url_prefix='/problem')
 @problem_controller.route('/all', methods=['GET'])
 @jwt_required()
 def get_problems():
+    """
+    Get all problem sort by index
+    """
     return jsonify(problems=[problem.to_problem_with_index() for problem in problem.get_all_problem()])
 
 
